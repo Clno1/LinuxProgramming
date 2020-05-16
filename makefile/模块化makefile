@@ -1,0 +1,21 @@
+src= $(wildcard ./src/*.c)	#通配符取得所有匹配文件 ./src/add/c ./src/sub/c等等
+obj= $(patsubst ./src/%.c, ./obj/%.o, $(src))	#把参三包含参一的都变成参二，其实就是字符串层面的改变，于文件本身无关
+
+inc_path = ./inc	#头文件目录
+
+myArgs = -Wall  -g	#自定义的编译参数
+
+ALL : a.out	#终极目标
+
+
+a.out : $(obj)
+	gcc $^ -o $@ $(myArgs)
+
+$(obj):./obj/%.o : ./src/%.c
+	gcc -c $< -o $@ $(myArgs) -I $(inc_path)
+
+
+clean:		#clean命令，删除.o文件以及.ou文件
+	-rm -rf $(obj) a.out
+
+.PHONY : clean ALL	#伪目标，为了clean生效
